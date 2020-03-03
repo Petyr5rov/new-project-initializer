@@ -1,0 +1,36 @@
+{
+  "name": "new-project-initializer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/main.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "ts-node main.ts",
+    "deploy": "npm run build && npm i -g .",
+    "lint": "tslint --format stylish -p .",
+    "lint:fix": "tslint --fix -p ."
+  },
+  "keywords": [],
+  "author": "Petyr Petrov",
+  "license": "MIT",
+  "preferGlobal": true,
+  "bin": {
+    "npi": "./dist/main.js"
+  },
+  "dependencies": {
+    "@types/fs-extra": "^8.1.0",
+    "@types/minimist": "^1.2.0",
+    "fs-extra": "^8.1.0",
+    "reflect-metadata": "^0.1.13",
+    "minimist": "^1.2.0",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.7",
+    "@types/reflect-metadata": "^0.1.0",
+    "@types/typescript": "^2.0.0",
+    "ts-node": "^8.6.2",
+    "tslint": "^6.0.0",
+    "tslint-microsoft-contrib": "^6.2.0"
+  }
+}
