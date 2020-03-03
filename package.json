@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "./dist/main.js",
+  "repository": "github:Petyr5rov/new-project-initializer",
   "scripts": {
     "build": "tsc -p .",
     "test": "ts-node main.ts",
