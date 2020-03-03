@@ -88,10 +88,10 @@ let TsCommand = class TsCommand {
                 }
             });
         }
-        if (node) {
+        if (node || all) {
             writeFile(tsconfig_1.tsconfig, 'tsconfig.json');
         }
-        if (lint) {
+        if (lint || all) {
             writeFile(tslint_1.tslint, 'tslint.json');
         }
     }
