@@ -23,9 +23,10 @@ export class HelpCommand implements ICommand {
       npi ts                      creates new TS project template folder and installs typescript, @types/typescript and @types/node
         arguments:
           --name                  Specifies the new project name
-          --lint                  Installs tslint and tslint-microsoft-contrib to the project
+          --lint                  Installs tslint and tslint-microsoft-contrib to the project and adds tslint.json
           --node                  Installs ts-node and adds tsconfig.json to the project
           --test                  Installs jasmine, jasmine-ts, jasmine-spec-reporter and @types/jasmine
+          --scripts               Add scripts to package.json file
           -a (or --all)           Initializes project with all packages
 
         example:

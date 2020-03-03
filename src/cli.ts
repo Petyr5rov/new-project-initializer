@@ -16,7 +16,6 @@ export class CLI {
   public async main() {
     const command = this.parser.command as keyof CommandContainer;
     const args: CommandParameters = this.parser.arguments;
-
     if (this.commandContainer[command] && typeof (this.commandContainer[command] as ICommand).execute === 'function') {
       const executionResult = await (this.commandContainer[command] as ICommand).execute(args);
 

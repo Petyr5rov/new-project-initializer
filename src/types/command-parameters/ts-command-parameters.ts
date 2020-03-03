@@ -3,5 +3,6 @@ export interface ITsCommandParameters {
   lint?: boolean;
   node?: boolean;
   test?: boolean;
+  scripts?: boolean;
   all?: boolean;
 }

@@ -24,6 +24,9 @@ class ArgumentsParser {
         if (args.test) {
             this._arguments.test = true;
         }
+        if (args.scripts) {
+            this._arguments.scripts = true;
+        }
         if (args.a || args.all) {
             this._arguments.all = true;
         }

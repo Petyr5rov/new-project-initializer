@@ -28,12 +28,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const console_printer_service_1 = require("../core/console-printer.service");
 const injectable_1 = require("../tools/decorators/injectable");
 const fse = __importStar(require("fs-extra"));
+const scripts_1 = require("../template/scripts");
+const tsconfig_1 = require("../template/tsconfig");
+const tslint_1 = require("../template/tslint");
 let TsCommand = class TsCommand {
-    constructor(consolePrinter // progressbar
-    ) {
+    constructor(consolePrinter) {
         this.consolePrinter = consolePrinter;
     }
-    execute({ name, lint, node, test, all }) {
+    execute({ name, lint, node, test, scripts, all }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const dirName = name ? name : 'New_Project';
@@ -45,21 +47,19 @@ let TsCommand = class TsCommand {
                     ? `npm i ${tsPacket} ${lintPacket} ${tsNodePacket} ${jasminePacket}`
                     : `npm i ${tsPacket} ${lint ? lintPacket : ''} ${node ? tsNodePacket : ''} ${test ? jasminePacket : ''}`;
                 const exec = require('child_process').exec;
-                yield fse.mkdir(dirName);
+                fse.mkdir(dirName);
                 process.chdir(dirName);
-                yield fse.mkdir('src');
-                yield exec(`npm init -y`);
-                yield exec(`${command}`, (error, stdout, stderr) => {
+                fse.mkdir('src');
+                exec(`npm init -y && ${command}`, (error, stdout, stderr) => {
                     if (error) {
                         this.consolePrinter.print(`error: ${error.message}`);
                         return;
                     }
                     if (stderr) {
                         this.consolePrinter.print(`stderr: ${stderr}`);
-                        return;
                     }
-                    this.consolePrinter.print(`stdout: ${stdout}`);
                 });
+                setTimeout(() => this.writeFiles(lint, node, scripts, all), 3000);
                 return { errors: 0, message: undefined };
             }
             catch (error) {
@@ -70,10 +70,34 @@ let TsCommand = class TsCommand {
             }
         });
     }
+    writeFiles(lint, node, scripts, all) {
+        const writeFile = (obj, adress) => {
+            const jsonFile = JSON.stringify(obj);
+            fse.writeFile(adress, jsonFile);
+        };
+        writeFile({}, 'main.ts');
+        if (scripts || all) {
+            fse.readFile('package.json', 'utf8', function readFileCallback(err, data) {
+                if (err) {
+                    throw new Error(err.message);
+                }
+                else {
+                    const obj = JSON.parse(data);
+                    obj.scripts = scripts_1.scriptsJSON;
+                    writeFile(obj, 'package.json');
+                }
+            });
+        }
+        if (node) {
+            writeFile(tsconfig_1.tsconfig, 'tsconfig.json');
+        }
+        if (lint) {
+            writeFile(tslint_1.tslint, 'tslint.json');
+        }
+    }
 };
 TsCommand = __decorate([
     injectable_1.Injectable(),
-    __metadata("design:paramtypes", [console_printer_service_1.ConsolePrinter // progressbar
-    ])
+    __metadata("design:paramtypes", [console_printer_service_1.ConsolePrinter])
 ], TsCommand);
 exports.TsCommand = TsCommand;
