@@ -30,7 +30,7 @@ export class HelpCommand implements ICommand {
           -a (or --all)           Initializes project with all packages
 
         example:
-          npi ts --lint --ts-node --test --filename=random100numbers.txt
+          npi ts --lint --ts-node --test
       `
     );
 
