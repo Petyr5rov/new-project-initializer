@@ -2,6 +2,6 @@
 NPI CLI tool
 initialize new TS project
 
-~still in developement~
+_still in developement_
 initialize new JS prject
 initialize new Angular project
