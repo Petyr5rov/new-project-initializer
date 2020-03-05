@@ -16,7 +16,7 @@ export class HelpCommand implements ICommand {
       Usage: npi <command>
 
       where <command> is one of:
-        help, ts
+        ts, help
 
       npi help                    prints this manual
 

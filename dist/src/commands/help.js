@@ -30,7 +30,7 @@ let HelpCommand = class HelpCommand {
       Usage: npi <command>
 
       where <command> is one of:
-        help, ts
+        ts, help
 
       npi help                    prints this manual
 
