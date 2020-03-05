@@ -22,6 +22,7 @@ const arguments_parser_service_1 = require("./core/arguments-parser.service");
 const commands_container_1 = require("./commands/commands-container");
 const console_printer_service_1 = require("./core/console-printer.service");
 const injectable_1 = require("./tools/decorators/injectable");
+const help_1 = require("./commands/help");
 let CLI = class CLI {
     constructor(parser = new arguments_parser_service_1.ArgumentsParser(), printer = new console_printer_service_1.ConsolePrinter(), commandContainer) {
         this.parser = parser;
@@ -37,6 +38,15 @@ let CLI = class CLI {
                 if (executionResult.errors) {
                     this.printer.print(executionResult.message);
                 }
+                else {
+                    this.printer.print(`
+        
+        You are set, happy coding :)
+        `);
+                }
+            }
+            else {
+                new help_1.HelpCommand().execute();
             }
         });
     }

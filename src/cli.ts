@@ -4,6 +4,7 @@ import { ArgumentsParser } from './core/arguments-parser.service';
 import { CommandContainer } from './commands/commands-container';
 import { ConsolePrinter } from './core/console-printer.service';
 import { Injectable } from './tools/decorators/injectable';
+import { HelpCommand } from './commands/help';
 
 @Injectable()
 export class CLI {
@@ -21,7 +22,14 @@ export class CLI {
 
       if (executionResult.errors) {
         this.printer.print(executionResult.message);
+      } else {
+        this.printer.print(`
+        
+        You are set, happy coding :)
+        `)
       }
+    } else {
+      new HelpCommand().execute();
     }
 
   }

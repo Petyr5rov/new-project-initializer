@@ -38,7 +38,10 @@ let TsCommand = class TsCommand {
     execute({ name, lint, node, test, scripts, all }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const dirName = name ? name : 'New_Project';
+                const dirName = name ? name : 'new-project';
+                if (fse.existsSync(`./${dirName}`)) {
+                    throw new Error(`Project with such name exists, please specify new one`);
+                }
                 const tsPacket = `typescript`;
                 const lintPacket = `tslint tslint-microsoft-contrib`;
                 const tsNodePacket = `ts-node @types/node`;
@@ -47,19 +50,21 @@ let TsCommand = class TsCommand {
                     ? `npm i ${tsPacket} ${lintPacket} ${tsNodePacket} ${jasminePacket}`
                     : `npm i ${tsPacket} ${lint ? lintPacket : ''} ${node ? tsNodePacket : ''} ${test ? jasminePacket : ''}`;
                 const exec = require('child_process').exec;
-                fse.mkdir(dirName);
-                process.chdir(dirName);
-                fse.mkdir('src');
-                exec(`npm init -y && ${command}`, (error, stdout, stderr) => {
-                    if (error) {
-                        this.consolePrinter.print(`error: ${error.message}`);
-                        return;
-                    }
-                    if (stderr) {
-                        this.consolePrinter.print(`stderr: ${stderr}`);
-                    }
-                });
-                setTimeout(() => this.writeFiles(lint, node, scripts, all), 3000);
+                try {
+                    fse.mkdir(dirName);
+                    process.chdir(dirName);
+                    fse.mkdirSync('src');
+                    process.chdir(`src`);
+                    fse.mkdir('core');
+                    fse.mkdir('types');
+                    test || all ? fse.mkdirSync('tests') : '';
+                    process.chdir(`..`);
+                    exec(`npm init -y && ${command}`);
+                    setTimeout(() => this.writeFiles(lint, node, test, scripts, all), 2000);
+                }
+                catch (error) {
+                    throw new Error(error.message);
+                }
                 return { errors: 0, message: undefined };
             }
             catch (error) {
@@ -70,12 +75,16 @@ let TsCommand = class TsCommand {
             }
         });
     }
-    writeFiles(lint, node, scripts, all) {
-        const writeFile = (obj, adress) => {
-            const jsonFile = JSON.stringify(obj);
+    writeFiles(lint, node, test, scripts, all) {
+        const writeFile = (data, adress) => {
+            const jsonFile = JSON.stringify(data);
             fse.writeFile(adress, jsonFile);
         };
-        writeFile({}, 'main.ts');
+        fse.writeFile('main.ts', '');
+        fse.writeFile('./src/index.ts', '');
+        fse.writeFile('./src/core/core.ts', '');
+        fse.writeFile('./src/types/types.ts', '');
+        test || all ? fse.writeFile('./src/tests/test.ts', '') : '';
         if (scripts || all) {
             fse.readFile('package.json', 'utf8', function readFileCallback(err, data) {
                 if (err) {
