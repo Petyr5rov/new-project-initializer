@@ -11,8 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const injectable_1 = require("../tools/decorators/injectable");
 let ConsolePrinter = class ConsolePrinter {
-    constructor() { }
-    // progressbar
+    constructor() {
+        //
+    }
     print(...texts) {
         console.log(...texts);
     }

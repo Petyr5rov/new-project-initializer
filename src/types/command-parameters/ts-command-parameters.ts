@@ -1,5 +1,5 @@
 export interface ITsCommandParameters {
-  name?: string,
+  name?: string;
   lint?: boolean;
   node?: boolean;
   test?: boolean;

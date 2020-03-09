@@ -22,11 +22,6 @@ export class CLI {
 
       if (executionResult.errors) {
         this.printer.print(executionResult.message);
-      } else {
-        this.printer.print(`
-        
-        You are set, happy coding :)
-        `)
       }
     } else {
       new HelpCommand().execute();

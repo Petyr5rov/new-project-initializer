@@ -7,10 +7,13 @@ import * as fse from 'fs-extra';
 import { scriptsJSON } from '../template/scripts';
 import { tsconfig } from '../template/tsconfig';
 import { tslint } from '../template/tslint';
+import { Initializer } from './initializer';
 
 @Injectable()
-export class TsCommand implements ICommand {
-  constructor(private readonly consolePrinter: ConsolePrinter) {}
+export class TsCommand extends Initializer implements ICommand {
+  constructor(consolePrinter: ConsolePrinter) {
+    super(consolePrinter);
+  }
 
   public async execute({
     name,
@@ -37,18 +40,20 @@ export class TsCommand implements ICommand {
         : `npm i ${tsPacket} ${lint ? lintPacket : ''} ${
             node ? tsNodePacket : ''
           } ${test ? jasminePacket : ''}`;
-      const exec = require('child_process').exec;
+      const util = require('util');
+      const exec = util.promisify(require('child_process').exec);
       try {
-        fse.mkdir(dirName);
-        process.chdir(dirName);
-        fse.mkdirSync('src');
-        process.chdir(`src`);
-        fse.mkdir('core');
-        fse.mkdir('types');
-        test || all ? fse.mkdirSync('tests') : '';
-        process.chdir(`..`);
-        exec(`npm init -y && ${command}`);
-        setTimeout(() => this.writeFiles(lint, node, test, scripts, all), 2000);
+        this.consolePrinter.print('Creating file tree...');
+        this.makeFileTree(dirName, test, all);
+        this.consolePrinter.print('Initializining project...');
+        exec(`npm init -y`).then(() => {
+          this.consolePrinter.print('Writing files...');
+          this.updateJSON(lint, node, scripts, all);
+          this.consolePrinter.print('Installing packages...');
+          exec(`${command}`).then(() =>
+            this.consolePrinter.print(`\n\nYou are all set, happy coding :)`)
+          );
+        });
       } catch (error) {
         throw new Error(error.message);
       }
@@ -60,44 +65,56 @@ export class TsCommand implements ICommand {
       };
     }
   }
-  private writeFiles(
+  protected updateJSON(
     lint: boolean | undefined,
     node: boolean | undefined,
-    test: boolean | undefined,
     scripts: boolean | undefined,
     all: boolean | undefined
   ) {
-    const writeFile = (data: any, adress: string): void => {
-      const jsonFile: string = JSON.stringify(data);
-      fse.writeFile(adress, jsonFile);
-    };
-    fse.writeFile('main.ts', '');
-    fse.writeFile('./src/index.ts', '');
-    fse.writeFile('./src/core/core.ts', '');
-    fse.writeFile('./src/types/types.ts', '');
-    test || all ? fse.writeFile('./src/tests/test.ts', '') : '';
-
-    if (scripts || all) {
-      fse.readFile('package.json', 'utf8', function readFileCallback(
-        err,
-        data
-      ) {
-        if (err) {
-          throw new Error(err.message);
-        } else {
+    try {
+      if (scripts || all) {
+        fse.readFile('package.json', 'utf8', (err: any, data: string): void => {
+          if (err) {
+            throw new Error(err.message);
+          }
           const obj = JSON.parse(data);
           obj.scripts = scriptsJSON;
-          writeFile(obj, 'package.json');
-        }
-      });
+          super.writeJSON(obj, 'package.json');
+        });
+      }
+      if (node || all) {
+        this.writeJSON(tsconfig, 'tsconfig.json');
+      }
+      if (lint || all) {
+        this.writeJSON(tslint, 'tslint.json');
+      }
+    } catch (err) {
+      throw new Error(err.message);
     }
-
-    if (node || all) {
-      writeFile(tsconfig, 'tsconfig.json');
-    }
-
-    if (lint || all) {
-      writeFile(tslint, 'tslint.json');
+  }
+  protected makeFileTree(
+    dirName: string,
+    test: boolean | undefined,
+    all: boolean | undefined
+  ) {
+    try {
+      fse.mkdir(dirName);
+      process.chdir(dirName);
+      fse.writeFile('main.ts', '');
+      fse.mkdirSync('src');
+      process.chdir('src');
+      fse.mkdir('core');
+      fse.mkdir('types');
+      if (test || all) {
+        fse.mkdirSync('tests');
+        fse.writeFile('./tests/test.ts', '');
+      }
+      process.chdir(`..`);
+      fse.writeFile('./src/index.ts', '');
+      fse.writeFile('./src/core/core.ts', '');
+      fse.writeFile('./src/types/types.ts', '');
+    } catch (err) {
+      throw new Error(err.message);
     }
   }
 }

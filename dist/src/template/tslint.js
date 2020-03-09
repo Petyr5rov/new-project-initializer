@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.tslint = {
-    'defaultSeverity': 'error',
-    'extends': ['tslint:recommended'],
-    'jsRules': {},
-    'rules': {
+    defaultSeverity: 'error',
+    extends: ['tslint:recommended'],
+    jsRules: {},
+    rules: {
         'jsdoc-require': false,
         'quotemark': [true, 'single'],
         'interface-name': true,
@@ -49,8 +49,8 @@ exports.tslint = {
         'prefer-readonly': false,
         'object-literal-sort-keys': false
     },
-    'linterOptions': {
-        'exclude': ['node_modules']
+    linterOptions: {
+        exclude: ['node_modules']
     },
-    'rulesDirectory': []
+    rulesDirectory: []
 };
