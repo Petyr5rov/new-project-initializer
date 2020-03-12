@@ -1,7 +1,6 @@
 import { IArgumentsParser } from './../types/core/arguments-parser';
 import { CommandParameters } from './../types/command-parameters/command-parameters';
 import minimist from 'minimist';
-import { join } from 'path';
 
 export class ArgumentsParser implements IArgumentsParser {
 
