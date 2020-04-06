@@ -29,7 +29,7 @@
     "@types/fs-extra": "^8.1.0",
     "@types/minimist": "^1.2.0",
     "fs-extra": "^8.1.0",
-    "minimist": "^1.2.0",
+    "minimist": ">=1.2.3",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
