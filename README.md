@@ -4,9 +4,8 @@ NPI CLI tool:
 
 _still in development_
 - initialize new JS project
-<<<<<<< HEAD
+
 test feature
-=======
 
 test from Inet
->>>>>>> origin/master
+
