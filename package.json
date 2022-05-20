@@ -8,7 +8,7 @@
     "build": "tsc -p .",
     "test": "ts-node main.ts",
     "deploy": "npm run build && npm i -g .",
-     "lint": "tslint --format stylish -p .",
+    "lint": "tslint --format stylish -p .",
     "lint:fix": "tslint --fix -p ."
   },
   "keywords": [
@@ -28,7 +28,7 @@
   "dependencies": {
     "@types/fs-extra": "^8.1.0",
     "@types/minimist": "^1.2.0",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.0",
     "minimist": ">=1.2.3",
     "reflect-metadata": "^0.1.13"
   },
